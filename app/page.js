@@ -6,13 +6,6 @@ import { waLink } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
-// Formación de Pamela, debajo del nombre.
-const CREDENTIALS = [
-  { name: 'UdelaR', detail: 'Medicina general', src: '/logos/udelar.png' },
-  { name: 'UM', detail: 'Formación avanzada en medicina estética', src: '/logos/um.png' },
-  { name: 'MG', detail: 'Cosmetología integral', src: '/logos/mg.png' },
-];
-
 export default async function Home() {
   const treatments = await sql`
     select id, category, name, description, duration_min, price, currency, price_from
@@ -21,30 +14,25 @@ export default async function Home() {
   return (
     <main>
       <header className="hero">
+        <h1 className="logo">
+          <img src="/akerum-logo-navy.svg" alt={config.businessName} />
+        </h1>
         <p className="eyebrow">{config.tagline}</p>
-        <h1>{config.businessName}</h1>
         {config.address && <p className="muted">{config.address}</p>}
-        <ul className="credentials">
-          {CREDENTIALS.map((c) => (
-            <li key={c.name}>
-              <img src={c.src} alt="" className="credential-logo" />
-              <span>
-                <strong>{c.name}</strong>
-                {c.detail}
-              </span>
-            </li>
-          ))}
-        </ul>
-        <nav className="social">
-          <a href={config.instagramUrl} target="_blank" rel="noopener noreferrer" className="pill">
-            <InstagramIcon /> Instagram
-          </a>
-          {config.whatsappNumber && (
-            <a href={waLink(config.whatsappNumber, 'Hola Pamela! Te escribo por una consulta.')} target="_blank" rel="noopener noreferrer" className="pill">
-              <WhatsAppIcon /> WhatsApp
-            </a>
-          )}
-        </nav>
+        {(config.instagramUrl || config.whatsappNumber) && (
+          <nav className="social">
+            {config.instagramUrl && (
+              <a href={config.instagramUrl} target="_blank" rel="noopener noreferrer" className="pill">
+                <InstagramIcon /> Instagram
+              </a>
+            )}
+            {config.whatsappNumber && (
+              <a href={waLink(config.whatsappNumber, 'Hola! Te escribo por una consulta.')} target="_blank" rel="noopener noreferrer" className="pill">
+                <WhatsAppIcon /> WhatsApp
+              </a>
+            )}
+          </nav>
+        )}
       </header>
 
       <BookingFlow treatments={treatments} business={publicConfig()} />

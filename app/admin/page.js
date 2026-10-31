@@ -15,7 +15,7 @@ export const metadata = { title: 'Panel · Agenda' };
 
 const TABS = [
   ['reservas', 'Reservas'],
-  ['tratamientos', 'Tratamientos'],
+  ['tratamientos', 'Servicios'],
   ['horarios', 'Horarios'],
   ['bloqueos', 'Bloqueos'],
 ];
@@ -112,11 +112,11 @@ async function Treatments({ back }) {
   return (
     <section className="card">
       <datalist id="categories">{categories.map((c) => <option key={c} value={c} />)}</datalist>
-      <p className="muted">Destildá “Disponible” para pausar un tratamiento: deja de aparecer en la agenda sin borrarlo. Marcá “desde” cuando el precio final depende de la paciente. El orden define en qué posición aparece.</p>
+      <p className="muted">Destildá “Disponible” para pausar un servicio: deja de aparecer en la agenda sin borrarlo. Marcá “desde” cuando el precio final depende de la paciente. El orden define en qué posición aparece.</p>
       {treatments.map((t) => (
         <TreatmentForm key={t.id} t={t} back={back} />
       ))}
-      <h2>Nuevo tratamiento</h2>
+      <h2>Nuevo servicio</h2>
       <TreatmentForm back={back} />
     </section>
   );

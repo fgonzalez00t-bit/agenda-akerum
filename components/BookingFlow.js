@@ -23,13 +23,15 @@ function addDaysIso(date, n) {
 
 // Precio más bajo de una categoría, para mostrar "desde ..." en su tarjeta.
 function fromPrice(list) {
+  const priced = list.filter((t) => Number(t.price) > 0);
+  if (priced.length === 0) return 'precio a consultar';
   const byCurrency = {};
-  for (const t of list) byCurrency[t.currency] = Math.min(byCurrency[t.currency] ?? Infinity, t.price);
+  for (const t of priced) byCurrency[t.currency] = Math.min(byCurrency[t.currency] ?? Infinity, t.price);
   const [currency, price] = Object.entries(byCurrency)[0];
   return formatPrice(price, currency, true);
 }
 
-// En pantallas anchas el calendario va en la columna derecha; en el celular, debajo del tratamiento elegido.
+// En pantallas anchas el calendario va en la columna derecha; en el celular, debajo del servicio elegido.
 function useIsWide() {
   const [wide, setWide] = useState(false);
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function BookingFlow({ treatments, business }) {
     };
   }, [treatment]);
 
-  // Con la reserva hecha, se oculta el encabezado (nombre, formación, redes) y queda solo la confirmación.
+  // Con la reserva hecha, se oculta el encabezado (logo y redes) y queda solo la confirmación.
   useEffect(() => {
     document.body.classList.toggle('booking-done', Boolean(done));
   }, [done]);
@@ -90,7 +92,7 @@ export default function BookingFlow({ treatments, business }) {
   const groups = useMemo(() => {
     const map = new Map();
     for (const t of treatments) {
-      const key = t.category || 'Otros tratamientos';
+      const key = t.category || 'Otros servicios';
       if (!map.has(key)) map.set(key, []);
       map.get(key).push(t);
     }
@@ -145,7 +147,7 @@ export default function BookingFlow({ treatments, business }) {
 
   if (done) {
     const message = [
-      `Hola Pamela! Soy ${form.name}. Acabo de reservar ${treatment.name} para el ${formatDate(date).toLowerCase()} a las ${time}.`,
+      `Hola! Soy ${form.name}. Acabo de reservar ${treatment.name} para el ${formatDate(date).toLowerCase()} a las ${time}.`,
       `Para confirmarla: ${window.location.origin}/admin/reserva/${done.id}`,
     ].join('\n\n');
     return (
@@ -164,7 +166,7 @@ export default function BookingFlow({ treatments, business }) {
               <a className="btn btn-wa btn-lg" href={waLink(business.whatsappNumber, message)} target="_blank" rel="noopener noreferrer">
                 <WhatsAppIcon /> Enviar aviso por WhatsApp
               </a>
-              <p className="muted small">El turno queda reservado a tu nombre y pendiente hasta que Pamela lo confirme.</p>
+              <p className="muted small">El turno queda reservado a tu nombre y pendiente hasta que {business.businessName} lo confirme.</p>
             </>
           ) : (
             <p className="muted">Tu turno queda pendiente hasta que {business.businessName} lo confirme. Te va a escribir al {form.phone}.</p>
@@ -200,30 +202,32 @@ export default function BookingFlow({ treatments, business }) {
   return (
     <>
       <section className="band">
-        <Wave className="wave wave-top" />
+        <Scallops className="wave wave-top" />
         <div className="band-inner">
           <p className="eyebrow light">Reservá tu turno online</p>
-          <h2 className="band-title">Elegí tu tratamiento</h2>
+          <h2 className="band-title">Elegí tu sesión</h2>
           <div className="cat-grid">
             {groups.map(([c, list], i) => (
               <button
                 key={c}
                 type="button"
-                className={`cat-tile tone-${i % 2} ${category === c ? 'selected' : ''}`}
+                className={`cat-tile tone-${i % 5} ${category === c ? 'selected' : ''}`}
                 onClick={() => chooseCategory(c)}
                 aria-pressed={category === c}
               >
                 <span className="cat-name">{c}</span>
                 <span className="cat-meta">
-                  {list.length} {list.length === 1 ? 'opción' : 'opciones'} · {fromPrice(list)}
+                  {list.length === 1
+                    ? `${formatDuration(list[0].duration_min)} · ${Number(list[0].price) ? formatPrice(list[0].price, list[0].currency, list[0].price_from) : 'a consultar'}`
+                    : `${list.length} opciones · ${fromPrice(list)}`}
                 </span>
                 <span className="cat-arrow" aria-hidden="true">→</span>
               </button>
             ))}
           </div>
-          {treatments.length === 0 && <p className="light">Por el momento no hay tratamientos disponibles para reservar online.</p>}
+          {treatments.length === 0 && <p className="light">Por el momento no hay servicios disponibles para reservar online.</p>}
         </div>
-        <Wave className="wave wave-bottom" />
+        <Scallops className="wave wave-bottom" />
       </section>
 
       {category && (
@@ -258,7 +262,7 @@ export default function BookingFlow({ treatments, business }) {
                 {schedule || (
                   <div className="side-empty">
                     <FolderCalendar month={month} days={{}} lastDate={todayIso()} onSelect={() => {}} setMonth={setMonth} />
-                    <p className="muted center">Elegí un tratamiento a la izquierda para ver los días libres.</p>
+                    <p className="muted center">Elegí un servicio a la izquierda para ver los días libres.</p>
                   </div>
                 )}
               </aside>
@@ -270,10 +274,13 @@ export default function BookingFlow({ treatments, business }) {
   );
 }
 
-function Wave({ className }) {
+// Borde festoneado, como las tarjetas de la identidad de Akerum.
+const SCALLOPS = `M0,24 ${'a20,20 0 0 1 40,0 '.repeat(36)}L1440,40 L0,40 Z`;
+
+function Scallops({ className }) {
   return (
-    <svg className={className} viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,30 C120,0 240,60 360,30 C480,0 600,60 720,30 C840,0 960,60 1080,30 C1200,0 1320,60 1440,30 L1440,60 L0,60 Z" />
+    <svg className={className} viewBox="0 0 1440 40" preserveAspectRatio="none" aria-hidden="true">
+      <path d={SCALLOPS} />
     </svg>
   );
 }
@@ -285,7 +292,7 @@ function Schedule({ ref, treatment, days, loadError, month, setMonth, date, setD
       {loadError && <p className="error">{loadError}</p>}
       {!days && !loadError && <p className="muted">Cargando horarios…</p>}
       {days && availableDates.length === 0 && (
-        <p className="muted">No hay turnos libres para este tratamiento en las próximas semanas. Escribile a Pamela por WhatsApp.</p>
+        <p className="muted">No hay turnos libres para este servicio en las próximas semanas. Escribinos por WhatsApp.</p>
       )}
       {days && availableDates.length > 0 && (
         <>
@@ -338,7 +345,7 @@ function Schedule({ ref, treatment, days, loadError, month, setMonth, date, setD
   );
 }
 
-// Calendario con forma de carpeta: pestaña marrón con el mes y círculo dibujado a mano en el día elegido.
+// Calendario con forma de carpeta: pestaña azul con el mes y círculo dibujado a mano en el día elegido.
 function FolderCalendar({ month, setMonth, days, selected, time, treatment, lastDate, onSelect }) {
   const now = new Date();
   const first = new Date(month.y, month.m, 1);

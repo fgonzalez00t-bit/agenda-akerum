@@ -1,23 +1,18 @@
-# Agenda de turnos · Dra. Pamela
+# Agenda de turnos · Akerum
 
-Web de reservas para un consultorio de medicina estética.
+Web de reservas para las sesiones de Akerum: tarot, numerología, astrología, biodecodificación y alquimia.
 
-- **Clientas** (`/`): eligen un tratamiento (con duración y precio), ven los días y horarios libres y reservan. Al terminar pueden avisarle a Pamela por WhatsApp con un botón.
-- **Pamela** (`/admin`): confirma o rechaza reservas, edita o pausa tratamientos, define su horario semanal y bloquea días completos o franjas puntuales.
-- **Aviso por WhatsApp**: con cada reserva nueva, Pamela recibe un mensaje con el link para confirmarla (vía CallMeBot, gratis).
+- **Clientes** (`/`): eligen un servicio (con duración y precio), ven los días y horarios libres y reservan. Al terminar pueden avisar por WhatsApp con un botón.
+- **Panel** (`/admin`): confirma o rechaza reservas, edita o pausa servicios, define el horario semanal y bloquea días completos o franjas puntuales.
+- **Aviso por WhatsApp**: con cada reserva nueva llega un mensaje con el link para confirmarla (vía CallMeBot, gratis).
 
-Hecho con Next.js 15 y Postgres. Los tratamientos, precios (en $ o USD) y el horario inicial (lunes a viernes de 9 a 18, hora de Uruguay) están en `db/seed.sql`; todo se puede editar desde el panel.
+Hecho con Next.js 15 y Postgres (Neon). Los servicios y el horario inicial (lunes a viernes de 9 a 18) están en `db/seed.sql`; todo se puede editar desde el panel. Un precio 0 se muestra como "A consultar".
 
 ## Puesta en marcha
 
-1. **Base de datos**: crear un proyecto gratis en [Supabase](https://supabase.com). En *Project Settings → Database*, copiar la *connection string* del **Transaction pooler**.
-2. **Tablas y datos de ejemplo**:
-   ```bash
-   npm install
-   DATABASE_URL="postgres://..." npm run db:setup
-   ```
-3. **Publicar en Vercel**: importar este repositorio en [vercel.com/new](https://vercel.com/new) y cargar las variables de `.env.example` (como mínimo `DATABASE_URL`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `INSTAGRAM_URL`, `WHATSAPP_NUMBER` y `PUBLIC_URL`).
-4. **Aviso por WhatsApp** (opcional): desde el WhatsApp de Pamela, seguir los pasos de [CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/) (agregar el contacto del bot y mandarle el mensaje de activación). La clave que responde va en `CALLMEBOT_APIKEY`.
+1. **Base de datos**: en la consola de [Neon](https://console.neon.tech), abrir el *SQL Editor* del proyecto y correr `db/schema.sql` y después `db/seed.sql`. (O, con la CLI: `neon env pull` y `npm run db:setup`.)
+2. **Publicar en Vercel**: importar este repositorio en [vercel.com/new](https://vercel.com/new), agregar la integración de Neon en *Storage* (carga `DATABASE_URL` sola) y el resto de las variables de `.env.example` (`ADMIN_PASSWORD`, `SESSION_SECRET`, `INSTAGRAM_URL`, `WHATSAPP_NUMBER`, `PUBLIC_URL`).
+3. **Aviso por WhatsApp** (opcional): desde el WhatsApp del consultorio, seguir los pasos de [CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/). La clave que responde va en `CALLMEBOT_APIKEY`.
 
 ## Desarrollo local
 
@@ -29,4 +24,4 @@ npm run dev
 
 ## Reglas de la agenda
 
-Se ajustan con variables de entorno: intervalo entre turnos (`SLOT_STEP_MIN`), cuántos días hacia adelante se puede reservar (`DAYS_AHEAD`) y la anticipación mínima en horas (`MIN_NOTICE_HOURS`). Las reservas pendientes ya ocupan el horario, así que nadie más puede tomarlo hasta que Pamela la rechace.
+Se ajustan con variables de entorno: intervalo entre turnos (`SLOT_STEP_MIN`), cuántos días hacia adelante se puede reservar (`DAYS_AHEAD`) y la anticipación mínima en horas (`MIN_NOTICE_HOURS`). Las reservas pendientes ya ocupan el horario, así que nadie más puede tomarlo hasta que se rechace desde el panel.
