@@ -1,5 +1,6 @@
-import BookingFlow from '@/components/BookingFlow';
+import BookingFlow, { Scallops } from '@/components/BookingFlow';
 import { InstagramIcon, WhatsAppIcon } from '@/components/Icons';
+import Services from '@/components/Services';
 import { config, publicConfig } from '@/lib/config';
 import { sql } from '@/lib/db';
 import { waLink } from '@/lib/format';
@@ -36,6 +37,7 @@ export default async function Home() {
       </header>
 
       <BookingFlow treatments={treatments} business={publicConfig()} />
+      {treatments.length === 1 && <Services Edge={Scallops} />}
 
       <footer className="footer muted">
         Los turnos quedan pendientes hasta que {config.businessName} los confirme por WhatsApp.

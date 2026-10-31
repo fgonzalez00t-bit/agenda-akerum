@@ -1,14 +1,10 @@
--- Servicios iniciales de Akerum (textos de su identidad visual). Precio 0 = "A consultar" hasta que
--- se cargue el real; duraciones provisorias. Solo se cargan si las tablas están vacías; después se
--- editan desde el panel (/admin).
-insert into treatments (category, name, description, duration_min, price, currency, price_from, sort)
+-- Akerum reserva una sola "Consulta": en la sesión se ve qué técnica usar. La duración es el bloque que
+-- ocupa en la agenda y el cupo, cuántas personas se atienden en el mismo horario. Precio 0 = "A consultar".
+-- Solo se carga si la tabla está vacía; después se edita desde el panel (/admin).
+insert into treatments (category, name, description, duration_min, price, currency, price_from, capacity, sort)
 select * from (values
-  ('Tarot', 'Lectura de tarot', 'El tarot es un conjunto de cartas que sirve para reflexionar sobre la vida, decisiones y posibilidades, usando símbolos y arquetipos.', 60, 0, 'UYU', false, 10),
-  ('Numerología', 'Sesión de numerología', 'La numerología estudia los números vinculados a la vida de una persona para comprender patrones, talentos y posibles caminos.', 60, 0, 'UYU', false, 20),
-  ('Astrología', 'Sesión de astrología', 'La astrología estudia la influencia de los astros en la personalidad y la vida de las personas, ayudando a reflexionar sobre patrones y posibilidades.', 60, 0, 'UYU', false, 30),
-  ('Biodecodificación', 'Sesión de biodecodificación', 'La biodecodificación busca entender el origen emocional de las enfermedades, viendo los síntomas como señales de conflictos internos no resueltos.', 60, 0, 'UYU', false, 40),
-  ('Alquimia', 'Sesión de alquimia', 'Definimos alquimia como la suma de técnicas que se complementan.', 90, 0, 'UYU', false, 50)
-) as t(category, name, description, duration_min, price, currency, price_from, sort)
+  ('Consulta', 'Consulta', 'En la consulta vemos juntos qué técnica te sirve más: tarot, numerología, astrología o biodecodificación.', 60, 0, 'UYU', false, 2, 10)
+) as t(category, name, description, duration_min, price, currency, price_from, capacity, sort)
 where not exists (select 1 from treatments);
 
 -- Lunes a viernes de 9 a 18

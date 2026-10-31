@@ -45,8 +45,10 @@ function useIsWide() {
 }
 
 export default function BookingFlow({ treatments, business }) {
+  // Con un solo servicio (la consulta de Akerum) no hay nada que elegir: se va directo al calendario.
+  const single = treatments.length === 1 ? treatments[0] : null;
   const [category, setCategory] = useState(null);
-  const [treatment, setTreatment] = useState(null);
+  const [treatment, setTreatment] = useState(single);
   const [days, setDays] = useState(null);
   const [loadError, setLoadError] = useState('');
   const [month, setMonth] = useState(() => {
@@ -199,6 +201,27 @@ export default function BookingFlow({ treatments, business }) {
     />
   );
 
+  if (single) {
+    return (
+      <section className="section booking-area single">
+        <div className="booking-grid">
+          <div className="treat-col">
+            <p className="eyebrow">Reservá tu turno online</p>
+            <h2 className="title">Reservá tu {single.name.toLowerCase()}</h2>
+            {single.description && <p className="muted">{single.description}</p>}
+            <ul className="facts">
+              <li><strong>Duración</strong> variable, reservamos {formatDuration(single.duration_min)}</li>
+              <li><strong>Valor</strong> {formatPrice(single.price, single.currency, single.price_from)}</li>
+              <li><strong>Cómo</strong> elegí un día y un horario; te confirmamos por WhatsApp</li>
+            </ul>
+            {!wide && schedule}
+          </div>
+          {wide && <aside className="side-col">{schedule}</aside>}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <>
       <section className="band">
@@ -277,7 +300,7 @@ export default function BookingFlow({ treatments, business }) {
 // Borde festoneado, como las tarjetas de la identidad de Akerum.
 const SCALLOPS = `M0,24 ${'a20,20 0 0 1 40,0 '.repeat(36)}L1440,40 L0,40 Z`;
 
-function Scallops({ className }) {
+export function Scallops({ className }) {
   return (
     <svg className={className} viewBox="0 0 1440 40" preserveAspectRatio="none" aria-hidden="true">
       <path d={SCALLOPS} />

@@ -87,7 +87,8 @@ function TreatmentForm({ t, back }) {
       <label className="grow">Categoría<input name="category" defaultValue={t?.category} list="categories" /></label>
       <label className="grow">Nombre<input name="name" defaultValue={t?.name} required /></label>
       <label className="grow2">Detalle<input name="description" defaultValue={t?.description} /></label>
-      <label>Duración (min)<input name="duration_min" type="number" min="5" step="5" defaultValue={t?.duration_min ?? 30} required /></label>
+      <label>Duración (min)<input name="duration_min" type="number" min="5" step="5" defaultValue={t?.duration_min ?? 60} required /></label>
+      <label className="xs">Cupo<input name="capacity" type="number" min="1" step="1" defaultValue={t?.capacity ?? 1} required title="Personas que se pueden atender en el mismo horario" /></label>
       <label className="xs">Moneda
         <select name="currency" defaultValue={t?.currency ?? 'UYU'}>
           <option value="UYU">$</option>
@@ -112,7 +113,7 @@ async function Treatments({ back }) {
   return (
     <section className="card">
       <datalist id="categories">{categories.map((c) => <option key={c} value={c} />)}</datalist>
-      <p className="muted">Destildá “Disponible” para pausar un servicio: deja de aparecer en la agenda sin borrarlo. Marcá “desde” cuando el precio final depende de la paciente. El orden define en qué posición aparece.</p>
+      <p className="muted">Destildá “Disponible” para pausar un servicio: deja de aparecer en la agenda sin borrarlo. Marcá “desde” cuando el precio final depende de la paciente. El orden define en qué posición aparece. “Cupo” es cuántas personas se pueden atender en el mismo horario. Con un solo servicio disponible, la agenda va directo al calendario.</p>
       {treatments.map((t) => (
         <TreatmentForm key={t.id} t={t} back={back} />
       ))}

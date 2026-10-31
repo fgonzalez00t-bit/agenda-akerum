@@ -49,6 +49,7 @@ function treatmentFields(fd) {
     price: Number(fd.get('price')),
     currency: str(fd, 'currency') === 'USD' ? 'USD' : 'UYU',
     price_from: fd.get('price_from') === 'on',
+    capacity: Math.max(1, Math.floor(Number(fd.get('capacity') || 1))),
     sort: Number(fd.get('sort') || 0),
     active: fd.get('active') === 'on',
   };
