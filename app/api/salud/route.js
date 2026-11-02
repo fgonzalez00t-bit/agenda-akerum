@@ -4,13 +4,13 @@ export const dynamic = 'force-dynamic';
 
 // Diagnóstico de la conexión con la base. No muestra datos sensibles, solo qué paso de la configuración falta.
 const HINTS = {
-  '42P01': 'La base está conectada pero faltan las tablas: ejecutá db/schema.sql y db/seed.sql en el SQL Editor de Supabase.',
-  '28P01': 'La clave de la base es incorrecta: revisá la parte [YOUR-PASSWORD] de DATABASE_URL (sin corchetes).',
-  '3D000': 'El nombre de la base al final de DATABASE_URL es incorrecto (debería terminar en /postgres).',
+  '42P01': 'La base está conectada pero faltan las tablas: ejecutá db/schema.sql y db/seed.sql en el SQL Editor de Neon.',
+  '28P01': 'La clave de la base es incorrecta: revisá la parte [YOUR-PASSWORD] de DATABASE_URL (copiala de nuevo desde Neon > Connect).',
+  '3D000': 'El nombre de la base al final de DATABASE_URL es incorrecto (en Neon suele terminar en /neondb).',
   ENOTFOUND: 'No se encuentra el servidor de la base: revisá que DATABASE_URL esté copiada completa.',
-  ECONNREFUSED: 'El servidor de la base rechazó la conexión: usá la dirección del Transaction pooler (puerto 6543).',
-  ETIMEDOUT: 'La conexión a la base tardó demasiado: usá la dirección del Transaction pooler (puerto 6543).',
-  ERR_INVALID_URL: 'DATABASE_URL no es una dirección válida: si la clave tiene símbolos como @ # / ?, cambiala en Supabase por una solo con letras y números.',
+  ECONNREFUSED: 'El servidor de la base rechazó la conexión: usá la dirección con -pooler que da Neon.',
+  ETIMEDOUT: 'La conexión a la base tardó demasiado: usá la dirección con -pooler que da Neon.',
+  ERR_INVALID_URL: 'DATABASE_URL no es una dirección válida: si la clave tiene símbolos como @ # / ?, copiala de nuevo desde Neon > Connect.',
 };
 
 export async function GET() {
