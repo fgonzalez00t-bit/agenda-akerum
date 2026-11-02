@@ -3,7 +3,7 @@
 -- Solo se carga si la tabla está vacía; después se edita desde el panel (/admin).
 insert into treatments (category, name, description, duration_min, price, currency, price_from, capacity, sort)
 select * from (values
-  ('Consulta', 'Consulta', 'En la consulta vemos juntos qué técnica te sirve más: tarot, numerología, astrología o biodecodificación.', 60, 0, 'UYU', false, 2, 10)
+  ('Consulta', 'Consulta', 'Consultas breves y focalizadas o acompañamiento continuo: en la consulta vemos juntos qué herramientas resuenan con tu proceso.', 60, 0, 'UYU', false, 2, 10)
 ) as t(category, name, description, duration_min, price, currency, price_from, capacity, sort)
 where not exists (select 1 from treatments);
 

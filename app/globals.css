@@ -223,3 +223,16 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-soft); border-colo
 @media (max-width: 520px) {
   .services .cat-grid { grid-template-columns: 1fr; }
 }
+.about { max-width: 720px; margin: 0 auto 8px; font-size: 1.02rem; line-height: 1.6; }
+.about p { margin: 0 0 14px; }
+.about-lead { font-size: 1.2rem; font-weight: 600; }
+.tools { list-style: none; padding: 0; margin: 4px 0 18px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.tools li { padding: 6px 14px; border-radius: 999px; font-weight: 600; font-size: .9rem; color: var(--navy); }
+.tools .tone-0 { background: var(--orange); color: #fff; }
+.tools .tone-1 { background: var(--lime); }
+.tools .tone-2 { background: var(--teal); }
+.tools .tone-3 { background: var(--bg); }
+.band-sub { font-family: var(--serif); font-weight: 600; font-size: 1.35rem; margin: 40px 0 16px; color: var(--teal); }
+.cat-grid.two { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); max-width: 760px; margin: 0 auto; }
+.cat-grid.one { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+.cat-price { margin-top: 6px; font-weight: 700; font-size: 1.05rem; }
