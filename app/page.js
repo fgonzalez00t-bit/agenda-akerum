@@ -1,6 +1,6 @@
 import BookingFlow, { Scallops } from '@/components/BookingFlow';
 import { InstagramIcon, WhatsAppIcon } from '@/components/Icons';
-import Services from '@/components/Services';
+import Services, { Workshops } from '@/components/Services';
 import { config, publicConfig } from '@/lib/config';
 import { sql } from '@/lib/db';
 import { waLink } from '@/lib/format';
@@ -43,6 +43,8 @@ export default async function Home() {
           </nav>
         )}
       </header>
+
+      <Workshops />
 
       {dbError ? (
         <section className="section center">

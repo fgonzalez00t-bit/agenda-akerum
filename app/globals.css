@@ -236,3 +236,17 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-soft); border-colo
 .cat-grid.two { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); max-width: 760px; margin: 0 auto; }
 .cat-grid.one { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
 .cat-price { margin-top: 6px; font-weight: 700; font-size: 1.05rem; }
+
+/* Banner de talleres */
+.workshops { max-width: 1080px; margin: 8px auto 0; padding: 26px 16px 8px; }
+.workshops-title { font-family: var(--serif); font-weight: 700; font-size: 1.05rem; letter-spacing: .2em; text-transform: uppercase; text-align: center; color: var(--orange); margin-bottom: 18px; }
+.workshops-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.workshop { position: relative; display: grid; gap: 4px; align-content: start; padding: 18px 20px; border-radius: 22px; background: var(--surface); border: 2px solid var(--line); }
+.workshop.tone-0 { background: var(--navy); border-color: var(--navy); color: var(--accent-ink); padding-right: 120px; }
+.workshop-name { font-weight: 700; font-size: 1.15rem; }
+.workshop-when { font-size: .9rem; opacity: .8; }
+.sticker { position: absolute; top: -14px; right: 14px; display: grid; place-items: center; width: 96px; height: 96px; padding: 8px; text-align: center; font-weight: 700; font-size: .95rem; line-height: 1.15; color: var(--navy); background: var(--lime); border-radius: 50%; transform: rotate(10deg); box-shadow: 0 6px 14px rgba(0, 0, 0, .18); }
+@media (max-width: 760px) {
+  .workshops-grid { grid-template-columns: 1fr; }
+  .workshops { padding-top: 22px; }
+}

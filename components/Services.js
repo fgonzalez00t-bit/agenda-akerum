@@ -9,11 +9,30 @@ const MODES = [
   { name: 'A largo plazo', text: 'Sobre todo ofrecemos sostén terapéutico y acompañamiento continuo en tus procesos.' },
 ];
 
+// sticker: fecha destacada en la esquina de la tarjeta (para el taller que se viene).
 const WORKSHOPS = [
-  { name: 'Acción de Gracias', when: 'Jueves 26/11' },
-  { name: 'Círculo de Mujeres', when: 'Próximamente anunciaremos la fecha' },
-  { name: 'Encuentros y propuestas', when: 'Diversos encuentros y propuestas que van surgiendo según la energía disponible del momento' },
+  { name: 'Acción de Gracias', when: 'Taller de Acción de Gracias.', sticker: 'Jueves 26/11' },
+  { name: 'Círculo de Mujeres', when: 'Próximamente anunciaremos la fecha.' },
+  { name: 'Encuentros y propuestas', when: 'Diversos encuentros y propuestas que van surgiendo según la energía disponible del momento.' },
 ];
+
+// Banner de talleres, arriba de la reserva.
+export function Workshops() {
+  return (
+    <section className="workshops">
+      <h2 className="workshops-title">Talleres</h2>
+      <div className="workshops-grid">
+        {WORKSHOPS.map((w, i) => (
+          <div key={w.name} className={`workshop tone-${i}`}>
+            {w.sticker && <span className="sticker">{w.sticker}</span>}
+            <span className="workshop-name">{w.name}</span>
+            <span className="workshop-when">{w.when}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export default function Services({ Edge }) {
   return (
@@ -50,15 +69,6 @@ export default function Services({ Edge }) {
           </div>
         </div>
 
-        <h3 className="band-sub">Talleres</h3>
-        <div className="cat-grid">
-          {WORKSHOPS.map((w, i) => (
-            <div key={w.name} className={`cat-tile info tone-${[3, 4, 3][i]}`}>
-              <span className="cat-name">{w.name}</span>
-              <span className="cat-desc">{w.when}</span>
-            </div>
-          ))}
-        </div>
       </div>
       <Edge className="wave wave-bottom" />
     </section>
