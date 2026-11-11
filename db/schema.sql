@@ -56,6 +56,8 @@ alter table treatments add column if not exists price_from boolean not null defa
 alter table bookings add column if not exists currency text not null default 'UYU';
 -- Cuántas personas se pueden atender a la vez en ese servicio (1 = turno exclusivo).
 alter table treatments add column if not exists capacity integer not null default 1 check (capacity > 0);
+-- Si la consulta es presencial o por Zoom.
+alter table bookings add column if not exists modality text not null default 'presencial' check (modality in ('presencial', 'zoom'));
 
 create index if not exists bookings_date_idx on bookings (date);
 create index if not exists blocked_slots_date_idx on blocked_slots (date);

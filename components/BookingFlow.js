@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { WhatsAppIcon } from './Icons';
-import { formatDate, formatDuration, formatPrice, waLink } from '@/lib/format';
+import { MODALITIES, formatDate, formatDuration, formatPrice, waLink } from '@/lib/format';
 
 const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 const DAY_HEADERS = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
@@ -57,7 +57,7 @@ export default function BookingFlow({ treatments, business }) {
   });
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
-  const [form, setForm] = useState({ name: '', phone: '', notes: '', website: '' });
+  const [form, setForm] = useState({ modality: '', name: '', phone: '', notes: '', website: '' });
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState(null);
@@ -149,7 +149,7 @@ export default function BookingFlow({ treatments, business }) {
 
   if (done) {
     const message = [
-      `Hola! Soy ${form.name}. Acabo de reservar ${treatment.name} para el ${formatDate(date).toLowerCase()} a las ${time}.`,
+      `Hola! Soy ${form.name}. Acabo de reservar ${treatment.name} ${MODALITIES[form.modality].phrase} para el ${formatDate(date).toLowerCase()} a las ${time}.`,
       `Para confirmarla: ${window.location.origin}/admin/reserva/${done.id}`,
     ].join('\n\n');
     return (
@@ -158,7 +158,7 @@ export default function BookingFlow({ treatments, business }) {
           <div className="check">✓</div>
           <h2 className="title">¡Ya casi está!</h2>
           <p>
-            <strong>{treatment.name}</strong>
+            <strong>{treatment.name} · {MODALITIES[form.modality].label}</strong>
             <br />
             {formatDate(date)} · {time} hs
           </p>
@@ -212,6 +212,7 @@ export default function BookingFlow({ treatments, business }) {
             <ul className="facts">
               <li><strong>Duración</strong> variable, reservamos {formatDuration(single.duration_min)}</li>
               <li><strong>Valor</strong> {formatPrice(single.price, single.currency, single.price_from)}</li>
+              <li><strong>Modalidad</strong> presencial o por Zoom, la elegís al reservar</li>
               <li><strong>Cómo</strong> elegí un día y un horario; te confirmamos por WhatsApp</li>
             </ul>
             {!wide && schedule}
@@ -345,6 +346,25 @@ function Schedule({ ref, treatment, days, loadError, month, setMonth, date, setD
           {date && time && (
             <form onSubmit={onSubmit} className="form booking-form">
               <p className="form-title">Tus datos</p>
+              <fieldset className="modality">
+                <legend>¿Cómo querés tu consulta?</legend>
+                <div className="modality-options">
+                  {Object.entries(MODALITIES).map(([key, m]) => (
+                    <label key={key} className={`modality-option ${form.modality === key ? 'selected' : ''}`}>
+                      <input
+                        type="radio"
+                        name="modality"
+                        value={key}
+                        required
+                        checked={form.modality === key}
+                        onChange={() => setForm({ ...form, modality: key })}
+                      />
+                      <span className="modality-name">{m.label}</span>
+                      <span className="modality-hint">{m.hint}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
               <label>
                 Nombre y apellido
                 <input required minLength={2} maxLength={80} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoComplete="name" />

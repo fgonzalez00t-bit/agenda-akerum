@@ -250,3 +250,17 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-soft); border-colo
   .workshops-grid { grid-template-columns: 1fr; }
   .workshops { padding-top: 22px; }
 }
+
+/* Presencial o por Zoom */
+.modality { border: 0; padding: 0; margin: 0; min-width: 0; }
+.modality legend { padding: 0; margin-bottom: 6px; font-size: .88rem; font-weight: 500; color: var(--muted); }
+.modality-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.modality-option { position: relative; display: grid; gap: 2px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: #fff; cursor: pointer; color: var(--ink); }
+.modality-option:hover { border-color: var(--accent); }
+.modality-option input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.modality-option:has(input:focus-visible) { outline: 2px solid var(--teal); outline-offset: 2px; }
+.modality-option.selected { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.modality-name { font-weight: 700; font-size: 1rem; }
+.modality-hint { font-size: .8rem; font-weight: 500; opacity: .8; }
+.badge.modality-presencial { background: #fff1e8; color: #a33a03; }
+.badge.modality-zoom { background: var(--accent-soft); color: #08707a; }
