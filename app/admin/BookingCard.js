@@ -1,19 +1,24 @@
 import { config } from '@/lib/config';
-import { formatDate, formatPrice, intlPhone, waLink } from '@/lib/format';
+import { MODALITIES, formatDate, formatPrice, intlPhone, waLink } from '@/lib/format';
 import { setBookingStatus } from './actions';
 
 const STATUS = { pending: 'Pendiente', confirmed: 'Confirmada', cancelled: 'Cancelada' };
 
 export default function BookingCard({ booking: b, back }) {
   const when = `${formatDate(b.date).toLowerCase()} a las ${b.start_time}`;
-  const confirmMsg = `Hola ${b.client_name}! Te confirmo tu turno de ${b.treatment_name} para el ${when}. ¡Te espero! ${config.businessName}`;
+  const modality = MODALITIES[b.modality] ?? MODALITIES.presencial;
+  const confirmMsg =
+    b.modality === 'zoom'
+      ? `Hola ${b.client_name}! Te confirmo tu ${b.treatment_name.toLowerCase()} por Zoom para el ${when}. Antes de la hora te paso el link para conectarte. ${config.businessName}`
+      : `Hola ${b.client_name}! Te confirmo tu ${b.treatment_name.toLowerCase()} presencial para el ${when}. ¡Te espero! ${config.businessName}`;
   const cancelMsg = `Hola ${b.client_name}! Te escribo por tu reserva de ${b.treatment_name} del ${when}. Lamentablemente no voy a poder atenderte en ese horario. ¿Te queda bien otro día?`;
 
   return (
     <article className={`booking status-${b.status}`}>
       <div className="booking-main">
         <div>
-          <span className={`badge ${b.status}`}>{STATUS[b.status]}</span>
+          <span className={`badge ${b.status}`}>{STATUS[b.status]}</span>{' '}
+          <span className={`badge modality-${b.modality}`}>{modality.label}</span>
           <h3>{b.start_time}–{b.end_time} · {b.treatment_name}</h3>
           <p className="muted">{formatDate(b.date)} · {formatPrice(b.price, b.currency)}</p>
           <p>

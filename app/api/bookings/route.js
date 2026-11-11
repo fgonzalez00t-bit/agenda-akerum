@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getAvailability } from '@/lib/availability';
 import { config } from '@/lib/config';
 import { sql } from '@/lib/db';
-import { formatDate, formatPrice } from '@/lib/format';
+import { MODALITIES, formatDate, formatPrice } from '@/lib/format';
 import { fromMin, isDate, isTime, toMin } from '@/lib/time';
 import { notifyOwner } from '@/lib/whatsapp';
 
@@ -19,10 +19,12 @@ export async function POST(request) {
   const name = clean(body.name, 80);
   const phone = clean(body.phone, 30);
   const notes = clean(body.notes, 500);
+  const modality = body.modality;
 
   if (!Number.isInteger(treatmentId) || !isDate(date) || !isTime(time)) {
     return NextResponse.json({ error: 'Datos de turno inválidos' }, { status: 400 });
   }
+  if (!MODALITIES[modality]) return NextResponse.json({ error: 'Elegí si la consulta es presencial o por Zoom' }, { status: 400 });
   if (name.length < 2) return NextResponse.json({ error: 'Ingresá tu nombre' }, { status: 400 });
   if (!/^\+?[\d\s()-]{8,20}$/.test(phone)) return NextResponse.json({ error: 'Ingresá un teléfono válido' }, { status: 400 });
 
@@ -33,9 +35,9 @@ export async function POST(request) {
     if (!days?.[date]?.includes(time)) return null;
     const [treatment] = await tx`select * from treatments where id = ${treatmentId}`;
     const [row] = await tx`
-      insert into bookings (treatment_id, treatment_name, price, currency, date, start_time, end_time, client_name, client_phone, notes)
+      insert into bookings (treatment_id, treatment_name, price, currency, date, start_time, end_time, client_name, client_phone, notes, modality)
       values (${treatment.id}, ${treatment.name}, ${treatment.price}, ${treatment.currency}, ${date}, ${time},
-              ${fromMin(toMin(time) + treatment.duration_min)}, ${name}, ${phone}, ${notes})
+              ${fromMin(toMin(time) + treatment.duration_min)}, ${name}, ${phone}, ${notes}, ${modality})
       returning *`;
     return row;
   });
@@ -48,6 +50,7 @@ export async function POST(request) {
     [
       '🗓️ *Nueva reserva pendiente*',
       `${booking.treatment_name} (${formatPrice(booking.price, booking.currency)})`,
+      `Modalidad: ${MODALITIES[booking.modality].label}`,
       `${formatDate(booking.date)} a las ${booking.start_time}`,
       `Clienta/e: ${booking.client_name} · ${booking.client_phone}`,
       ...(booking.notes ? [`Nota: ${booking.notes}`] : []),
